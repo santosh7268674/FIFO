@@ -1,0 +1,47 @@
+module syncfifo_tb;
+  reg [31:0]din;
+  reg rst,rd_en,wr_en,clk; 
+  wire [31:0]dout;
+  wire full, empty;
+  
+  fifo syncfifotb( .data_in(din),.data_out(dout),.rst(rst),.rd_en(rd_en),.wr_en(wr_en),.clk(clk),.full(full),.empty(empty));
+  always #5 clk=~clk;
+  initial
+  begin
+    clk = 0; din = 8'd0;
+    rst = 1; 
+     #5
+    rst = 0;
+    wr_en = 1; rd_en = 0;
+    #5 din=32'd10;
+    #5 din=32'd11;
+    #5 din=32'd12;
+    #5 din=32'd13;
+    #5 din=32'd14;
+    #5 din=32'd15;
+    #5 din=32'd16;
+    #5 din=32'd17;
+    #5 din=32'd18;
+    #5 din=32'd19;
+    #5 din=32'd20;
+    #5 din=32'd21;
+    #5 din=32'd22;
+    #5 din=32'd23;
+    #5 din=32'd24;
+    #5 din=32'd25;
+    #5 din=32'd26;
+     #5 din=32'd27;
+     #5 din=32'd28;
+     #5 din=32'd28;
+     #5 din=32'd29;
+     rd_en=1;
+     #5 din=32'd30;
+    #5 din=32'd31;
+   #5 din=32'd32;
+    #150 $finish;
+
+  end
+   
+  always@(din)
+    $display("time= %0t,clk=%b,din=%0d,dout=%0d,full=%b,empty=%b",$time,clk,din,dout,full,empty);
+ Endmodule
