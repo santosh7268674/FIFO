@@ -1,0 +1,58 @@
+module fifo (data_out, full, empty, data_in, clk,rst,wr_en,rd_en);
+
+parameter length = 32;
+parameter depth = 16;
+input [length-1 : 0] data_in;
+input clk,wr_en,rd_en;
+input rst;
+output reg [length-1 : 0] data_out;
+output reg full;
+output reg empty;
+
+
+reg [length-1 : 0] mem [depth-1 : 0];
+reg [3 : 0] rd_ptr;
+reg [3 : 0] wr_ptr;
+
+
+always @(posedge clk or posedge rst) begin
+	if (rst) begin
+	wr_ptr <= 0;
+	rd_ptr <= 0;
+	end
+	else begin
+	if (wr_en) begin
+	mem[wr_ptr] = data_in;
+	wr_ptr = wr_ptr + 1;
+	end
+	if (rd_en) begin
+            data_out = mem[rd_ptr];
+            rd_ptr = rd_ptr + 1;
+end
+end
+end
+always @ (posedge clk or posedge rst)
+begin
+if (rst)
+full <= 1'b0;
+else if (wr_en && rd_en)
+;
+else if (rd_en)
+full <= 1'b0;
+else if (wr_en && (rd_ptr == wr_ptr + 1'b1))
+full <=1'b1;
+end
+
+
+always @ (posedge clk or posedge rst)
+begin
+if (rst)
+empty <= 1'b1;
+else if ( wr_en && rd_en)
+; 
+else if (wr_en)
+empty <= 1'b0;
+else if (rd_en && (wr_ptr == rd_ptr + 1'b1 ))
+empty <= 1'b1;
+end
+endmodule
